@@ -12,40 +12,20 @@ use App\Jobs\LogPersonActionJob;
 
 class PostService
 {
-    public function checkTitleExists(string $title): bool
-    {
-        return Post::where('title', $title)->exists();
-    }
-
     public function createPost(array $data)
     {
-        $title = $this->checkTitleExists($data['title']);
-        if ($title) {
-            throw new \Exception('Title already exists');
-        }
         return Post::create($data);
     }
 
     public function getPost($id)
     {
         $post = Post::with('person')->find($id);
-        if (!$post) {
-            throw new \Exception('Post not found');
-        }
         return $post;
     }
 
     public function updatePost(array $data, $id)
     {
         $post = Post::find($id);
-        if (!$post) {
-            throw new \Exception('Post not found');
-        }
-        if (isset($data['title']) && $data['title'] !== $post->title) {
-            if ($this->checkTitleExists($data['title'])) {
-                throw new \Exception('Title already exists');
-            }
-        }
         $post->update($data);
         return $post;
     }
@@ -53,9 +33,6 @@ class PostService
     public function deletePost($id)
     {
         $post = Post::find($id);
-        if (!$post) {
-            throw new \Exception('Post not found');
-        }
         return $post->delete();
     }
 

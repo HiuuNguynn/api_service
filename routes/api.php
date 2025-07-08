@@ -39,11 +39,13 @@ Route::prefix('posts')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('api.posts.index');
     Route::get('/create', [PostController::class, 'create'])->name('api.posts.create');
     Route::post('/', [PostController::class, 'store'])->name('api.posts.store');
-    Route::get('/{id}', [PostController::class, 'show'])->name('api.posts.show');
-    Route::get('/{id}/edit', [PostController::class, 'edit'])->name('api.posts.edit');
-    Route::put('/{id}', [PostController::class, 'update'])->name('api.posts.update');
-    Route::delete('/{id}', [PostController::class, 'destroy'])->name('api.posts.destroy');
-    Route::get('/bulk-edit', [PostController::class, 'bulkEdit'])->name('api.posts.bulk-edit');
-    Route::post('/bulk-update', [PostController::class, 'bulkUpdate'])->name('api.posts.bulk-update');
-    Route::get('/check-title', [PostController::class, 'checkTitle'])->name('api.posts.check-title');
+
+    Route::middleware('check.id.post')->group(function () {
+        Route::get('/{id}', [PostController::class, 'show'])->name('api.posts.show');
+        Route::get('/{id}/edit', [PostController::class, 'edit'])->name('api.posts.edit');
+        Route::put('/{id}', [PostController::class, 'update'])->name('api.posts.update');
+        Route::delete('/{id}', [PostController::class, 'destroy'])->name('api.posts.destroy');
+        // Route::get('/bulk-edit', [PostController::class, 'bulkEdit'])->name('api.posts.bulk-edit');
+        // Route::post('/bulk-update', [PostController::class, 'bulkUpdate'])->name('api.posts.bulk-update');
+    });
 });
