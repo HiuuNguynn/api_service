@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PersonController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\API\PersonController;
+use App\Http\Controllers\API\PostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes

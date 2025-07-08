@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,9 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'person_id' => 'required|exists:people,id_user',
-            'title' => 'required|string|max:255|unique:posts,title',
-            'content' => 'required|string',
+            'person_id' => 'sometimes|required|exists:people,id_user',
+            'title' => 'sometimes|required|string|max:255',
+            'content' => 'sometimes|required|string',
         ];
     }
-    public function messages()
-    {
-        return [
-            'title.unique' => 'Title already exists',
-            'title.required' => 'Please enter title.',
-        ];
-    }
-}
+} 

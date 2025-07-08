@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 class StorePersonRequest extends FormRequest
 {
     /**
@@ -25,9 +24,17 @@ class StorePersonRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:20',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:people,email',
             'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:100',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            'email.unique' => 'Email already exists',
+            'email.required' => 'Please enter email.',
+            'name.required' => 'Please enter name.',
         ];
     }
 }
