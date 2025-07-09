@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PersonController;
 use App\Http\Controllers\API\PostController;
+use App\Http\Controllers\API\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,7 @@ Route::prefix('people')->group(function () {
     });
 });
 
+// Post API Routes
 Route::prefix('posts')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('api.posts.index');
     Route::get('/create', [PostController::class, 'create'])->name('api.posts.create');
@@ -45,7 +47,15 @@ Route::prefix('posts')->group(function () {
         Route::get('/{id}/edit', [PostController::class, 'edit'])->name('api.posts.edit');
         Route::put('/{id}', [PostController::class, 'update'])->name('api.posts.update');
         Route::delete('/{id}', [PostController::class, 'destroy'])->name('api.posts.destroy');
-        // Route::get('/bulk-edit', [PostController::class, 'bulkEdit'])->name('api.posts.bulk-edit');
-        // Route::post('/bulk-update', [PostController::class, 'bulkUpdate'])->name('api.posts.bulk-update');
     });
+});
+
+// Auth API Routes
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    Route::middleware('auth.jwt')->post('/change-password', [AuthController::class, 'changePassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 });

@@ -27,7 +27,7 @@ class PostService
     {
         $post = Post::find($id);
         $post->update($data);
-        return $post;
+        return $post->fresh();
     }
 
     public function deletePost($id)
@@ -39,77 +39,6 @@ class PostService
     public function getAllPosts()
     {
         return Post::all();
-    }
-
-    public function bulkUpdate(array $validated): array
-    {
-        $results = [];
-
-        $posts = $validated['posts'] ?? null;
-
-        if (!is_array($posts) || empty($posts)) {
-            return [
-                'success' => false,
-                'message' => 'Invalid input: posts array required',
-                'results' => []
-            ];
-        }
-
-        foreach ($posts as $postData) {
-            $result = $this->updateSinglePost($postData);
-            $results[] = $result;
-        }
-
-        return $results;
-    }
-
-
-    public function updateSinglePost(array $postData): array
-    {
-        if (!isset($postData['id'], $postData['title'], $postData['content'])) {
-            return [
-                'id' => $postData['id'] ?? null,
-                'status' => 'invalid data',
-                'error' => 'Missing required fields'
-            ];
-        }
-
-        $post = Post::find($postData['id']);
-        if (!$post) {
-            return [
-                'id' => $postData['id'],
-                'status' => 'not found'
-            ];
-        }
-
-        if ($postData['title'] !== $post->title) {
-            $titleExists = Post::where('title', $postData['title'])
-                ->where('id', '!=', $post->id)
-                ->exists();
-            if ($titleExists) {
-                return [
-                    'id' => $postData['id'],
-                    'status' => 'title exists'
-                ];
-            }
-        }
-
-        try {
-            $post->update([
-                'title' => $postData['title'],
-                'content' => $postData['content'],
-            ]);
-            return [
-                'id' => $postData['id'],
-                'status' => 'updated'
-            ];
-        } catch (\Exception $e) {
-            return [
-                'id' => $postData['id'],
-                'status' => 'update failed',
-                'error' => $e->getMessage()
-            ];
-        }
     }
 
 

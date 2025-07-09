@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'auth' => [
+        'secret_key' => env('JWT_SECRET', 'your-secret-key'),
+        'algorithm' => env('JWT_ALGO', 'HS256'),
+        'day_expire' => env('JWT_DAY_EXPIRE', 1),
+    ],
+
 ];

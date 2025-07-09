@@ -18,6 +18,16 @@ class PersonService
         return Person::all();
     }
 
+    public function getPerson($id)
+    {
+        return Person::find($id);
+    }
+
+    public function getPersonWithPosts($id)
+    {
+        return Person::with('posts')->find($id);
+    }
+
     public function createPerson(array $data)
     {
         return Person::create($data);

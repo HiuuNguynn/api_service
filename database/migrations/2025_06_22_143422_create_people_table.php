@@ -14,14 +14,16 @@ class CreatePeopleTable extends Migration
     public function up()
     {
         Schema::create('people', function (Blueprint $table) {
-            $table->bigIncrements('id_user'); // tự tăng, primary key
-        
+            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
         
             $table->timestamps();
+
+            // Khóa ngoại
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         
     }

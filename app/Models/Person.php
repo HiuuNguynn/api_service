@@ -10,11 +10,11 @@ class Person extends Model
     use HasFactory;
 
     protected $table = 'people';
-    protected $primaryKey = 'id_user';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
+        'user_id',
         'name',
         'email',
         'phone',
@@ -24,5 +24,10 @@ class Person extends Model
     public function posts()
     {
         return $this->hasMany(Post::class, 'person_id', 'id_user');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

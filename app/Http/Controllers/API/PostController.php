@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\Post;
-use App\Models\Person;
-use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use App\Http\Requests\BulkUpdatePostRequest;
 use App\Service\PostService;
 use App\Helpers\ApiResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -19,13 +13,17 @@ class PostController extends Controller
     public function __construct(PostService $postService)
     {
         $this->postService = $postService;
-        $this->middleware('check.id.post')->only('index');
     }
 
     public function index()
     {
         $posts = $this->postService->getAllPosts();
         return ApiResponse::success($posts, 'Posts fetched successfully');
+    }
+
+    public function create()
+    {
+        return ApiResponse::success(null, 'Create post form data');
     }
 
     public function store(StorePostRequest $request)
@@ -46,9 +44,10 @@ class PostController extends Controller
         return ApiResponse::success($post, 'Post fetched successfully');
     }
 
-    public function update(UpdatePostRequest $request, $id)
+    public function update(StorePostRequest $request, $id)
     {
-        $post = $this->postService->updatePost($request->validated(), $id);
+        $validated = $request->validated();
+        $post = $this->postService->updatePost($validated, $id);
         return ApiResponse::success($post, 'Post updated successfully');
     }
 

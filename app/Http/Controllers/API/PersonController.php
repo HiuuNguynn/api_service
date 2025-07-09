@@ -16,7 +16,6 @@ class PersonController extends Controller
     public function __construct(PersonService $personService)
     {
         $this->personService = $personService;
-        $this->middleware('check.user.id')->only('index');
     }
 
     public function index(Request $request)
@@ -25,12 +24,28 @@ class PersonController extends Controller
         return ApiResponse::success($people, 'People fetched successfully');
     }
 
+    public function create()
+    {
+        return ApiResponse::success(null, 'Create person form data');
+    }
+
     public function store(StorePersonRequest $request)
     {
         $person = $this->personService->store($request);
         return ApiResponse::success($person, 'Person created successfully', 201);
     }
 
+    public function show($id)
+    {
+        $person = $this->personService->getPerson($id);
+        return ApiResponse::success($person, 'Person fetched successfully');
+    }
+
+    public function edit($id)
+    {
+        $person = $this->personService->getPerson($id);
+        return ApiResponse::success($person, 'Person fetched successfully');
+    }
 
     public function update(StorePersonRequest $request, $id) 
     {
@@ -45,11 +60,15 @@ class PersonController extends Controller
         return ApiResponse::success($person, 'Person deleted successfully');
     }
 
+    public function getPersonWithPosts($id)
+    {
+        $person = $this->personService->getPersonWithPosts($id);
+        return ApiResponse::success($person, 'Person with posts fetched successfully');
+    }
+
     public function getAllPeople()
     {
         $people = $this->personService->getAllPeople();
         return ApiResponse::success($people, 'All people fetched successfully');
     }
-
-    
 }
