@@ -52,17 +52,12 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $validated = $request->validated();
-
-        try {
-            $result = $this->authService->registerUserAndPerson($validated);
-
-            return ApiResponse::success([
-                'user' => $result['user'],
-                'person' => $result['person'],
-            ], 'Đăng ký thành công', 201);
-        } catch (\Exception $e) {
-            return ApiResponse::error('Đăng ký thất bại: ' . $e->getMessage(), 500);
-        }
+        $result = $this->authService->registerUserAndPerson($validated);
+        return ApiResponse::success([
+            'user' => $result['user'],
+            'person' => $result['person'],
+        ], 'Đăng ký thành công', 201);
+        
     }
 
     public function changePassword(ChangePassWord $request)
@@ -83,30 +78,19 @@ class AuthController extends Controller
     public function resetPassword(ResetPassWord $request)
     {
         $validated = $request->validated();
-
-        $status = Password::reset(
-            $validated,
-            function (User $user, string $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
-                $user->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
+        $status = $this->authService->resetPassword($validated);
         if ($status === Password::PASSWORD_RESET) {
             return ApiResponse::success('Đặt lại mật khẩu thành công');
         } else {
             return ApiResponse::error(__($status), 400);
         }
     }
-    public function forgotPassword(EmailRequest $request) 
+    
+    public function forgotPassword(EmailRequest $request)
     {
         $validated = $request->validated();
-        $status = Password::sendResetLink($validated);
+        $status = $this->authService->sendResetPasswordMail($validated);
+
         if ($status === Password::RESET_LINK_SENT) {
             return ApiResponse::success('Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư!');
         } else {

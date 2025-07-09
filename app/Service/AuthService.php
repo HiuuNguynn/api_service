@@ -10,6 +10,8 @@ use App\Helpers\AuthToken;
 use App\Http\Requests\API\EmailRequest;
 use Illuminate\Support\Facades\Password;
 use App\Helpers\ApiResponse;
+use Illuminate\Support\Str;
+use Illuminate\Auth\Events\PasswordReset;
 
 class AuthService
 {
@@ -44,5 +46,24 @@ class AuthService
             "exp" => $exp,
         ];
         return AuthToken::encodeAccessToken($payload);
+    }
+
+    public function sendResetPasswordMail(array $validated)
+    {
+        return Password::sendResetLink($validated);
+    }
+
+    public function resetPassword(array $validated)
+    {
+        return Password::reset(
+            $validated,
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+                $user->save();
+                event(new PasswordReset($user));
+            }
+        );
     }
 }
