@@ -10,6 +10,9 @@ use App\Helpers\AuthToken;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthService
 {
@@ -36,7 +39,7 @@ class AuthService
     {
         $user = User::where('email', $dataProvider->email ?? $dataProvider['email'])->first();
         if (!$user) {
-            throw new \Exception('Email không tồn tại');
+            throw new ModelNotFoundException();
         }
         return $user;
     }
@@ -46,7 +49,7 @@ class AuthService
         $user = $this->checkEmailExists($credentials);
         
         if (!Hash::check($credentials['password'], $user->password)) {
-            throw new \Exception('Sai mật khẩu');
+            throw new UnauthorizedHttpException('');
         }
         
         $token = $this->createAccessToken($user);
@@ -60,7 +63,7 @@ class AuthService
     public function changePassword($user, array $validated) 
     {
         if (!Hash::check($validated['old_password'], $user->password)) {
-            throw new \Exception('Mật khẩu cũ không đúng');
+            throw new UnauthorizedHttpException('');
         }
 
         $user->password = Hash::make($validated['new_password']);

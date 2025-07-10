@@ -22,16 +22,11 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        try {
-            $result = $this->authService->loginUser($request->validated());
-            
-            return ApiResponse::success([
-                'user' => $result['user'],
-                'token' => $result['token'],
-            ]);
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), 401);
-        }
+        $result = $this->authService->loginUser($request->validated());
+        return ApiResponse::success([
+            'user' => $result['user'],
+            'token' => $result['token'],
+        ]);
     }
 
     public function logout(Request $request)
