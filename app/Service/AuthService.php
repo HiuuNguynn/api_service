@@ -7,9 +7,7 @@ use App\Models\Person;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\AuthToken;
-use App\Http\Requests\API\EmailRequest;
 use Illuminate\Support\Facades\Password;
-use App\Helpers\ApiResponse;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 
@@ -32,6 +30,42 @@ class AuthService
 
             return compact('user', 'person');
         });
+    }
+
+    public function checkEmailExists($dataProvider)
+    {
+        $user = User::where('email', $dataProvider->email ?? $dataProvider['email'])->first();
+        if (!$user) {
+            throw new \Exception('Email không tồn tại');
+        }
+        return $user;
+    }
+
+    public function loginUser(array $credentials)
+    {
+        $user = $this->checkEmailExists($credentials);
+        
+        if (!Hash::check($credentials['password'], $user->password)) {
+            throw new \Exception('Sai mật khẩu');
+        }
+        
+        $token = $this->createAccessToken($user);
+        
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+    }
+
+    public function changePassword($user, array $validated) 
+    {
+        if (!Hash::check($validated['old_password'], $user->password)) {
+            throw new \Exception('Mật khẩu cũ không đúng');
+        }
+
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
+        return $user;
     }
 
     public function createAccessToken($user)

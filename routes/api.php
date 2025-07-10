@@ -55,7 +55,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
-    Route::middleware('auth.jwt')->post('/change-password', [AuthController::class, 'changePassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::middleware('auth.jwt')->post('/change_password', [AuthController::class, 'changePassword']);
+    Route::post('/reset_password', [AuthController::class, 'resetPassword']);
+    Route::post('/forgot_password', [AuthController::class, 'forgotPassword']);
 });
