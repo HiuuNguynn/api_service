@@ -12,22 +12,21 @@ class Person extends Model
     protected $table = 'people';
     public $incrementing = true;
     protected $keyType = 'int';
+    protected $primaryKey = 'user_id';
 
     protected $fillable = [
         'user_id',
         'name',
         'email',
         'phone',
+        'role',
         'address',
+        'status',
     ];
 
-    public function posts()
-    {
-        return $this->hasMany(Post::class, 'person_id', 'id_user');
-    }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'status');
     }
 }

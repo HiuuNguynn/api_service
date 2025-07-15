@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PersonController;
-use App\Http\Controllers\API\PostController;
+
 use App\Http\Controllers\API\AuthController;
 
 /*
@@ -36,26 +36,21 @@ Route::prefix('people')->group(function () {
     });
 });
 
-// Post API Routes
-Route::prefix('posts')->group(function () {
-    Route::get('/', [PostController::class, 'index'])->name('api.posts.index');
-    Route::get('/create', [PostController::class, 'create'])->name('api.posts.create');
-    Route::post('/', [PostController::class, 'store'])->name('api.posts.store');
-
-    Route::middleware('check.id.post')->group(function () {
-        Route::get('/{id}', [PostController::class, 'show'])->name('api.posts.show');
-        Route::get('/{id}/edit', [PostController::class, 'edit'])->name('api.posts.edit');
-        Route::put('/{id}', [PostController::class, 'update'])->name('api.posts.update');
-        Route::delete('/{id}', [PostController::class, 'destroy'])->name('api.posts.destroy');
-    });
-});
-
 // Auth API Routes
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
-    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::middleware('auth.jwt')->post('/logout', [AuthController::class, 'logout']);
     Route::middleware('auth.jwt')->post('/change_password', [AuthController::class, 'changePassword']);
     Route::post('/reset_password', [AuthController::class, 'resetPassword']);
     Route::post('/forgot_password', [AuthController::class, 'forgotPassword']);
 });
+
+Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function () {       
+    Route::get('/unactive_person/{id}', [PersonController::class, 'unactivePerson']);
+    Route::get('/active_person/{id}', [PersonController::class, 'activePerson']);
+    Route::get('/unactive_all_person', [PersonController::class, 'unactiveAllPerson']);
+    Route::get('/active_all_person', [PersonController::class, 'activeAllPerson']);
+});
+
+Route::post('/registerMutilsPerson', [AuthController::class, 'registerMutilsPerson']);

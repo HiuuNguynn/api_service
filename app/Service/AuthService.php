@@ -10,8 +10,9 @@ use App\Helpers\AuthToken;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;    
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthService
@@ -44,10 +45,18 @@ class AuthService
         return $user;
     }
 
+    public function checkStatus($user)
+    {
+        if ($user->status == 0) {
+            throw new NotFoundHttpException();
+        }
+        return $user;
+    }
+
     public function loginUser(array $credentials)
     {
         $user = $this->checkEmailExists($credentials);
-        
+        $this->checkStatus($user);
         if (!Hash::check($credentials['password'], $user->password)) {
             throw new UnauthorizedHttpException('');
         }
@@ -102,5 +111,10 @@ class AuthService
                 event(new PasswordReset($user));
             }
         );
+    }
+
+    public function registerMutilsPerson(array $validated)
+    {
+        return $this->registerUserAndPerson($validated);
     }
 }

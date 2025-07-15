@@ -25,7 +25,7 @@ class AuthenticateJWT
             $request->setUserResolver(function () use ($user) {
                 return $user;
             });
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 

@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
+    const STATUS_ACTIVE = 1;
+    const STATUS_DEACTIVE = 0;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,6 +26,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
+        'role',
     ];
 
     /**
@@ -44,6 +51,22 @@ class User extends Authenticatable
 
     public function person()
     {
-        return $this->hasOne(Person::class, 'user_id');
+        return $this->hasOne(Person::class, 'user_id', 'status');
     }
+  
+    public function scopeUserRole($user)
+    {
+        return $user->where('role', self::ROLE_USER);
+    }
+
+    public function scopeInactiveUser($user) 
+    {
+        return $user->where('status', self::STATUS_DEACTIVE);
+    }
+
+    public function scopeActiveUser($user) 
+    {
+        return $user->where('status', self::STATUS_ACTIVE);
+    }
+
 }

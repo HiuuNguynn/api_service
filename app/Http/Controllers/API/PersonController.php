@@ -6,8 +6,8 @@ use App\Http\Requests\StorePersonRequest;
 use App\Service\PersonService;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
-use App\Http\Middleware\CheckSomething;
-use App\Models\Person; // Added this import for the new updatePerson method
+use App\Http\Middleware\CheckAdmin;
+use App\Models\Person;
 
 class PersonController extends Controller
 {
@@ -70,5 +70,29 @@ class PersonController extends Controller
     {
         $people = $this->personService->getAllPeople();
         return ApiResponse::success($people, 'All people fetched successfully');
+    }
+
+    public function deactivateUser($id)
+    {
+        $this->personService->deactivateUserById($id);
+        return ApiResponse::success('User deactivated successfully');
+    }
+
+    public function activateUser($id)
+    {
+        $this->personService->activateUserById($id);
+        return ApiResponse::success('User activated successfully');
+    }
+
+    public function deactivateAllUsers()
+    {
+        $this->personService->deactivateAllUsers();
+        return ApiResponse::success('All users deactivated successfully');
+    }
+
+    public function activateAllUsers()
+    {
+        $this->personService->activateAllUsers();
+        return ApiResponse::success('All users activated successfully');
     }
 }

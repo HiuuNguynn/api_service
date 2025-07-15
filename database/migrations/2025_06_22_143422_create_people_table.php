@@ -19,7 +19,7 @@ class CreatePeopleTable extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-        
+            $table->integer('status')->default(1);
             $table->timestamps();
 
             // Khóa ngoại

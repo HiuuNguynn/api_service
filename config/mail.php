@@ -115,4 +115,8 @@ return [
         ],
     ],
 
+    'inactive_user_message' => 'Your account has been deactivated. Please contact the administrator for more information.',
+    'active_user_message' => 'Your account has been activated. Please login to continue.',
+    
+
 ];

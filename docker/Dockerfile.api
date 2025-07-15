@@ -1,0 +1,23 @@
+FROM wyveo/nginx-php-fpm:php81
+RUN apt-get update && apt-get install netcat -y && apt-get install -y \
+&& apt-get purge -y --auto-remove $buildDeps \
+    && apt-get clean \
+    && apt-get autoremove \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+COPY docker/nginx/app.conf /etc/nginx/conf.d/default.conf
+COPY docker/php/www.conf /etc/php/8.1/fpm/pool.d/www.conf
+COPY docker/start.sh /start.sh
+RUN chmod 755 /start.sh
+WORKDIR /usr/share/nginx/html
+COPY composer.json ./
+COPY composer.lock ./
+RUN composer install -vv --no-interaction --no-scripts --no-dev
+COPY . .
+COPY .env.example ./.env
+RUN cat .env
+RUN chmod -R 777 ./docker
+RUN composer dump-autoload --no-dev
+RUN chmod 777 -R /usr/share/nginx/html/storage
+RUN chmod 777 -R /usr/share/nginx/html/bootstrap/cache
