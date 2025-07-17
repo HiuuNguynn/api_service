@@ -47,7 +47,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function () {       
-    Route::get('/deactivate_all_person', [PersonController::class, 'deactivateAllUsers']);
-    Route::get('/activate_all_person', [PersonController::class, 'activateAllUsers']);
+    Route::get('/deactivate_all_users', [PersonController::class, 'deactivateAllUsers']);
+    Route::get('/activate_all_users', [PersonController::class, 'activateAllUsers']);
 });
 

@@ -75,12 +75,6 @@ class PersonService
             ->update(['status' => User::STATUS_ACTIVE]);
     }    
 
-    /**
-     * Gửi email cho people theo batch (10 người một lần), chỉ gửi cho status = 1
-     *
-     * @return array
-     */
-    
     public function sendBatchEmailsToPeople()
     {
         $query = User::query()->where('status', User::STATUS_ACTIVE);
