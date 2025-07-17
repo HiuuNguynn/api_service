@@ -27,9 +27,3 @@
 | GET    | /api/admin/active_person/{id}    | Activate a person by id             | Yes          |
 | GET    | /api/admin/unactive_all_person   | Deactivate all users (role=user)    | Yes          |
 | GET    | /api/admin/active_all_person     | Activate all users (role=user)      | Yes          |
-
-## Other APIs
-| Method | Endpoint         | Description           | Auth      |
-|--------|-----------------|-----------------------|-----------|
-| GET    | /api/user       | Get current user info | Yes (JWT) |
-| POST   | /api/registerMutilsPerson | Register user & person (multi) | No | 
