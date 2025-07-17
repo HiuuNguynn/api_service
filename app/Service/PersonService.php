@@ -25,11 +25,6 @@ class PersonService
         return Person::find($id);
     }
 
-    public function getPersonWithPosts($id)
-    {
-        return Person::with('posts')->find($id);
-    }
-
     public function createPerson(array $data)
     {
         return Person::create($data);
@@ -56,10 +51,12 @@ class PersonService
 
     public function deactivateUserById($id)
     {
-        return DB::table('users')
-            ->where('status', User::STATUS_ACTIVE)
-            ->where('role', User::ROLE_USER)
-            ->update(['status' => User::STATUS_DEACTIVE]);
+        return User::find($id)->update(['status' => User::STATUS_DEACTIVE]);
+    }
+
+    public function activateUserById($id)
+    {
+        return User::find($id)->update(['status' => User::STATUS_ACTIVE]);
     }
 
     public function deActivateAllUsers()

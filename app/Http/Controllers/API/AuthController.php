@@ -74,5 +74,9 @@ class AuthController extends Controller
         : ApiResponse::error('Không thể gửi email đặt lại mật khẩu.', 400);
     }
 
-   
+    public function deleteAccount($id)
+    {
+        $this->authService->deleteAccount($id);
+        return ApiResponse::success();
+    }
 } 

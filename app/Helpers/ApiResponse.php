@@ -11,7 +11,7 @@ class ApiResponse
         $response = [
             'success' => true,
             'message' => $message,
-            'data' => $data,
+            // 'data' => $data,
             'status' => $status,
         ];
         return response()->json($response, $status);

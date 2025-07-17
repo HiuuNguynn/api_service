@@ -10,11 +10,10 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Auth\AuthenticationException;
 use Throwable;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ApiResponse;
+use \Illuminate\Auth\Access\AuthorizationException;
 
 class Handler extends ExceptionHandler
 {
@@ -93,6 +92,10 @@ class Handler extends ExceptionHandler
             case MethodNotAllowedHttpException::class:
                 $message = __('message.error.common.405');
                 $statusCode = JsonResponse::HTTP_METHOD_NOT_ALLOWED;
+                break;
+            case AuthorizationException::class:
+                $message = __('message.error.common.403');
+                $statusCode = JsonResponse::HTTP_FORBIDDEN;
                 break;
             default:
                 $message = __('message.error.common.500');

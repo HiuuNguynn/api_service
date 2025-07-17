@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function person()
     {
-        return $this->hasOne(Person::class, 'user_id', 'status');
+        return $this->hasOne(Person::class, 'user_id', 'id');
     }
   
     public function scopeUserRole($user)

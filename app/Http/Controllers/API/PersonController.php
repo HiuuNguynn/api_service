@@ -60,12 +60,6 @@ class PersonController extends Controller
         return ApiResponse::success($person, 'Person deleted successfully');
     }
 
-    public function getPersonWithPosts($id)
-    {
-        $person = $this->personService->getPersonWithPosts($id);
-        return ApiResponse::success($person, 'Person with posts fetched successfully');
-    }
-
     public function getAllPeople()
     {
         $people = $this->personService->getAllPeople();

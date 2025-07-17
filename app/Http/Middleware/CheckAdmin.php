@@ -5,8 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use App\Helpers\ApiResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 class CheckAdmin
 {
     /**
@@ -18,10 +17,8 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        $adminEmail = User::where('role', 'admin')->first()->email;
-      
-        if ($request->user()->email !== $adminEmail) {
-            return ApiResponse::error('You are not authorized to access this resource', 403);
+        if ($request->user()->role !== User::ROLE_ADMIN) {
+            throw new AuthorizationException();
         }
 
         return $next($request);

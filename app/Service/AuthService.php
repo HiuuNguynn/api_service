@@ -11,10 +11,9 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;    
-use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-
+use Illuminate\Auth\Access\AuthorizationException;
 class AuthService
 {
     public function registerUserAndPerson(array $validated)
@@ -47,8 +46,8 @@ class AuthService
 
     public function checkStatus($user)
     {
-        if ($user->status == 0) {
-            throw new NotFoundHttpException();
+        if ($user->status == User::STATUS_DEACTIVE) {
+            throw new AuthorizationException();
         }
         return $user;
     }
@@ -116,5 +115,10 @@ class AuthService
     public function registerMutilsPerson(array $validated)
     {
         return $this->registerUserAndPerson($validated);
+    }
+
+    public function deleteAccount($id)
+    {
+       return User::find($id)->delete();    
     }
 }

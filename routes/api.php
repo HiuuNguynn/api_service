@@ -32,7 +32,6 @@ Route::prefix('people')->group(function () {
         Route::get('/{id}/edit', [PersonController::class, 'edit'])->name('api.people.edit');
         Route::put('/{id}', [PersonController::class, 'update'])->name('api.people.update');
         Route::delete('/{id}', [PersonController::class, 'destroy'])->name('api.people.destroy');
-        Route::get('/{id}/with-posts', [PersonController::class, 'getPersonWithPosts'])->name('api.people.with-posts');
     });
 });
 
@@ -44,6 +43,7 @@ Route::prefix('auth')->group(function () {
     Route::middleware('auth.jwt')->post('/change_password', [AuthController::class, 'changePassword']);
     Route::post('/reset_password', [AuthController::class, 'resetPassword']);
     Route::post('/forgot_password', [AuthController::class, 'forgotPassword']);
+    Route::delete('/delete_account/{id}', [AuthController::class, 'deleteAccount']);
 });
 
 Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function () {       
