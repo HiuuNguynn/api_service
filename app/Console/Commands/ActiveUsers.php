@@ -37,6 +37,6 @@ class ActiveUsers extends Command
     public function handle()
     {
         $this->personService->activateAllUsers();
-        $this->info('All users have been activated');
+        return Command::SUCCESS;
     }
 }

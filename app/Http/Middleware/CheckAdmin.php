@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
+
 class CheckAdmin
 {
     /**

@@ -18,11 +18,11 @@ class ResetPassWord extends FormRequest
     public function messages()
     {
         return [
-            'email.required' => 'Email là bắt buộc',
-            'email.email' => 'Email không hợp lệ',
-            'password.required' => 'Mật khẩu là bắt buộc',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự',
-            'password.confirmed' => 'Mật khẩu không khớp',
+            'email.required' => 'Email is required',
+            'email.email' => 'Invalid email address',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.confirmed' => 'Password confirmation does not match',
         ];
     }
 }

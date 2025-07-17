@@ -40,6 +40,6 @@ class DeactiveUsers extends Command
     public function handle()
     {
        $this->PersonService->deActivateAllUsers();
-       $this->info('All users have been Disactivated');
+       return Command::SUCCESS;
     }
 }

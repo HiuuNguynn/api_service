@@ -16,10 +16,10 @@ class ChangePassWord extends FormRequest
     public function messages()
     {
         return [
-            'old_password.required' => 'Mật khẩu cũ là bắt buộc',
-            'new_password.required' => 'Mật khẩu mới là bắt buộc',
-            'new_password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự',
-            'new_password.confirmed' => 'Mật khẩu mới không khớp',
+            'old_password.required' => 'Old password is required',
+            'new_password.required' => 'New password is required',
+            'new_password.min' => 'New password must be at least 6 characters',
+            'new_password.confirmed' => 'New password confirmation does not match',
         ];
     }
 }

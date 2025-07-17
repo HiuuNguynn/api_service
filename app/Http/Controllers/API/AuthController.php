@@ -23,29 +23,23 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $result = $this->authService->loginUser($request->validated());
-        return ApiResponse::success([
-            'user' => $result['user'],
-            'token' => $result['token'],
-        ]);
+        return ApiResponse::success('Login successful', 200);
     }
 
     public function logout(Request $request)
     {
         if ($request->user() && $request->user()->currentAccessToken()) {
             $request->user()->currentAccessToken()->delete();
-            return response()->json(['message' => 'Đăng xuất thành công']);
+            return response()->json(['message' => 'Logout successful']);
         }
-        return response()->json(['message' => 'Không tìm thấy phiên đăng nhập'], 401);
+        return response()->json(['message' => 'No active session found'], 401);
     }
 
     public function register(RegisterRequest $request)
     {
         $validated = $request->validated();
         $result = $this->authService->registerUserAndPerson($validated);
-        return ApiResponse::success([
-            'user' => $result['user'],
-            'person' => $result['person'],
-        ], 'Đăng ký thành công', 201);
+        return ApiResponse::success('Registration successful', 201);
     }
 
     public function changePassword(ChangePassWord $request)
@@ -53,7 +47,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $user = $request->user();
         $this->authService->changePassword($user, $validated);
-        return ApiResponse::success('Đổi mật khẩu thành công');
+        return ApiResponse::success('Password changed successfully');
     }
 
     public function resetPassword(ResetPassWord $request)
@@ -61,7 +55,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $status = $this->authService->resetPassword($validated);
         return $status === Password::PASSWORD_RESET 
-        ? ApiResponse::success('Đặt lại mật khẩu thành công') 
+        ? ApiResponse::success('Password reset successfully') 
         : ApiResponse::error(__($status), 400);
     }
     
@@ -70,13 +64,13 @@ class AuthController extends Controller
         $validated = $request->validated();
         $status = $this->authService->sendResetPasswordMail($validated);
         return $status === Password::RESET_LINK_SENT 
-        ? ApiResponse::success('Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư!') 
-        : ApiResponse::error('Không thể gửi email đặt lại mật khẩu.', 400);
+        ? ApiResponse::success('Password reset email sent. Please check your inbox!') 
+        : ApiResponse::error('Unable to send password reset email.', 400);
     }
 
     public function deleteAccount($id)
     {
         $this->authService->deleteAccount($id);
-        return ApiResponse::success();
+        return ApiResponse::success('Account deleted successfully');
     }
 } 

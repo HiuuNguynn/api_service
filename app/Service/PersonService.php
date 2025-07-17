@@ -86,7 +86,7 @@ class PersonService
         $query = User::query()->where('status', User::STATUS_ACTIVE);
         $totalPeople = $query->count();
         if ($totalPeople === 0) {
-            return CommandResponse::error('Không có người nào có status = 1 để gửi email');
+            return CommandResponse::error('No active users (status = 1) to send email');
         }
 
         $batchCount = 0;
@@ -98,7 +98,7 @@ class PersonService
                 SendBatchEmailJob::dispatch($batchCount, $userIds);
             });
 
-        return CommandResponse::success("Đã lên lịch gửi email cho {$totalPeople} người (status = 1) trong {$batchCount} batch");
+        return CommandResponse::success("Scheduled email sending for {$totalPeople} users (status = 1) in {$batchCount} batches");
     }
     
 }

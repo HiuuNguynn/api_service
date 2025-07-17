@@ -26,9 +26,9 @@ class PersonObserver
     public function updated(Person $person)
     {
         //
-        if($person->isDirty('status', 'email'))
+        if($person->wasChanged('status'))
         {
-            $person->user()->update(['status' => $person->status, 'email' => $person->email]);
+            $person->user()->update(['status' => $person->status]);
         }
     }
 
@@ -40,8 +40,7 @@ class PersonObserver
      */
     public function deleted(Person $person)
     {
-        //
-        $person->user()->delete();
+       //
     }
 
     /**

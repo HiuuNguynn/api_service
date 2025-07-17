@@ -1,32 +1,42 @@
-# CURD Laravel Project
+# CRUD Mini Backend Project
 
-## Backend Features
+## Main Features
+- User registration, login, JWT authentication, password change, forgot/reset password
+- User and Person management (CRUD)
+- Role-based access: Admin, User, account status check (active/deactive)
+- RESTful API, input validation, error codes
+- Batch email sending (queue/job)
+- Data change logging
+- Middleware for permission, status, data checks
+- Observer for syncing User and Person status
 
-This project provides backend APIs and logic for a user management system (User/Person) with the following main features:
+## Technologies Used
+- Laravel 8+, Eloquent ORM, Migration, Seeder
+- JWT Auth, custom Middleware, Observer, Job/Queue
+- Docker, Docker Compose, MySQL, Redis
 
-- **Authentication & Account Management:**
-  - Register, login, logout, change password, and password reset via API
-  - Simultaneous creation of User and Person on registration
-  - API token management (API Token)
-  - Basic role-based access: admin, user
+## Highlights
+- Clean, extensible code
+- Robust error handling & validation
+- Easy to integrate & expand
 
-- **Person Management (CRUD):**
-  - Create, list, view details, update, and delete Person via API
-  - Manage Person/User status (activate/deactivate individually or in bulk)
+## How to Run
+```bash
+# Clone & enter project
+ git clone <repo-url>
+ cd <project-folder>
 
-- **Batch Email Sending:**
-  - Support for sending automated batch emails to multiple users (only active users), using queue and command
+# Setup
+ cp .env.example .env
+ composer install
+ npm install
+ php artisan key:generate
+ php artisan migrate --seed
 
-- **Admin Controls:**
-  - API/command for admin to activate/deactivate users, including bulk operations
-
-- **Validation & Error Handling:**
-  - Input validation with clear error messages
-  - Handle not found, unauthorized, and invalid status cases
-
-- **Sample Data Seeding:**
-  - Includes a sample admin account for login and API testing
-
-## Notes
-- All features are implemented as RESTful APIs or artisan commands, ready for integration with any frontend or external system.
-- No user interface (UI) or frontend is included in this backend scope.
+# Start (Docker)
+ docker-compose up -d
+# Or local
+ php artisan serve
+```
+- API: http://localhost:8000/api
+- Edit `.env` for DB/mail config if needed.
