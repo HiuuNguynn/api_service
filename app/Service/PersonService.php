@@ -56,16 +56,10 @@ class PersonService
 
     public function deactivateUserById($id)
     {
-        return User::userRole()
-            ->where('id', $id)
+        return DB::table('users')
+            ->where('status', User::STATUS_ACTIVE)
+            ->where('role', User::ROLE_USER)
             ->update(['status' => User::STATUS_DEACTIVE]);
-    }
-
-    public function activateUserById($id)
-    {
-        return User::userRole()
-            ->where('id', $id)
-            ->update(['status' => User::STATUS_ACTIVE]);
     }
 
     public function deActivateAllUsers()

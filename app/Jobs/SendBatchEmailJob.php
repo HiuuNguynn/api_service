@@ -43,7 +43,7 @@ class SendBatchEmailJob implements ShouldQueue
         foreach ($people as $person) {
             try {
                 $this->sendEmailToPerson($person);
-                Log::info("Email sent to person {$person->id} ({$person->email}) in batch {$this->batchId}");
+                Log::info("Email sent to person id: {$person->id} ({$person->email}) in batch {$this->batchId}");
             } catch (\Exception $e) {
                 Log::error("Failed to send email to person {$person->id}: " . $e->getMessage());
             }

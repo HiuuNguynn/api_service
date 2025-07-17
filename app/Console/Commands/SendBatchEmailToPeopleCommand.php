@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Service\PersonService;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SendBatchEmailToPeopleCommand extends Command
 {
@@ -46,6 +47,6 @@ class SendBatchEmailToPeopleCommand extends Command
     public function handle()
     {
         $result = $this->personService->sendBatchEmailsToPeople();
-        return $result['success'] ? $this->info($result['message']) : $this->error($result['message']);
+        Log::info($result);
     }
 } 
