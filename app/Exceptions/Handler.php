@@ -14,6 +14,7 @@ use Throwable;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ApiResponse;
 use \Illuminate\Auth\Access\AuthorizationException;
+use Maatwebsite\Excel\Validators\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -66,7 +67,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $e)
     {
-        Log::channel(ECommon::LOG_CHANNEL_ERROR)->error("{$e->getMessage()} - {$e->getFile()} - {$e->getLine()}");
+        Log::channel('daily')->error("{$e->getMessage()} - {$e->getFile()} - {$e->getLine()}");
     }
 
     /**
@@ -97,14 +98,18 @@ class Handler extends ExceptionHandler
                 $message = __('message.error.common.403');
                 $statusCode = JsonResponse::HTTP_FORBIDDEN;
                 break;
+            case ValidationException::class:
+                $message = __('message.error.common.422');
+                $statusCode = JsonResponse::HTTP_UNPROCESSABLE_ENTITY;
+                break;
             default:
                 $message = __('message.error.common.500');
                 $statusCode = JsonResponse::HTTP_INTERNAL_SERVER_ERROR;
                 break;
         }
-        Log::channel(ECommon::LOG_CHANNEL_ERROR)->error("{$e->getMessage()} - {$e->getFile()} - {$e->getLine()}");
+        Log::channel('daily')->error("{$e->getMessage()} - {$e->getFile()} - {$e->getLine()}");
 
         return ApiResponse::error($message, $statusCode);
-    }
+    }   
 
 }

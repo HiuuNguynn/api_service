@@ -13,6 +13,8 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Database\Eloquent\ModelNotFoundException;    
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Helpers\ApiResponse;
+
 class AuthService
 {
     public function registerUserAndPerson(array $validated)
@@ -23,14 +25,7 @@ class AuthService
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
             ]);
-
-            $person = Person::create([
-                'user_id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ]);
-
-            return compact('user', 'person');
+            return $user;
         });
     }
 
@@ -116,8 +111,24 @@ class AuthService
         return $this->registerUserAndPerson($validated);
     }
 
-    public function deleteAccount($id)
+    public function deleteAccount($id, $emailAdmin)
     {
-       return User::find($id)->delete();    
+        $user = User::find($id);
+        if($user->role == User::ROLE_ADMIN) {
+            throw new AuthorizationException();
+        }
+        $user->status = User::STATUS_DEACTIVE;
+        $user->deleted_by = $emailAdmin;
+        $user->save();   
+        $user->delete();
+        return $user;
+    }
+
+    public function restoreAccount($id)
+    {
+        $user = User::where('role', User::ROLE_USER)->onlyTrashed()->find($id);
+        $user->status = User::STATUS_ACTIVE;
+        $user->restore();
+        return $user;
     }
 }

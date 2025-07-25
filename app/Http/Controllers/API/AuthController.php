@@ -22,7 +22,7 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $result = $this->authService->loginUser($request->validated());
+        $this->authService->loginUser($request->validated());
         return ApiResponse::success('Login successful', 200);
     }
 
@@ -38,7 +38,7 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {
         $validated = $request->validated();
-        $result = $this->authService->registerUserAndPerson($validated);
+        $this->authService->registerUserAndPerson($validated);
         return ApiResponse::success('Registration successful', 201);
     }
 
@@ -70,7 +70,15 @@ class AuthController extends Controller
 
     public function deleteAccount($id)
     {
-        $this->authService->deleteAccount($id);
+        $authUser = auth()->user();
+        $emailAdmin = $authUser->email;
+        $this->authService->deleteAccount($id, $emailAdmin);
         return ApiResponse::success('Account deleted successfully');
+    }
+
+    public function restoreAccount($id)
+    {
+        $this->authService->restoreAccount($id);
+        return ApiResponse::success('Account restored successfully');
     }
 } 

@@ -12,22 +12,18 @@ class LogHelper
      * @param string $action Action performed (created, updated, deleted...)
      * @param string $model  Model name (User, Person...)
      * @param int|string $id  Record ID
-     * @param array|null $oldData Old data (if any)
-     * @param array|null $newData New data (if any)
-     * @param int|string|null $byUserId User ID who performed the action (if any)
+     * @param int|string $byId  Record ID of the user who deleted the record
      * @return void
      */
-    public static function Log($action, $model, $id, $oldData = null, $newData = null, $byUserId = null)
+    public static function Log($action, $model, $id, $byId = null)
     {
         $log = [
             'action' => $action,
             'model' => $model,
             'id' => $id,
-            'by_user' => $byUserId,
-            'old' => $oldData,
-            'new' => $newData,
             'at' => now()->toDateTimeString(),
+            'byId' => $byId,
         ];
-        Log::channel('api')->info('DATA_CHANGE', $log);
+        Log::channel('daily')->info('DATA_CHANGE', $log);
     }
 }

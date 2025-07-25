@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
 use Illuminate\Foundation\Http\FormRequest;
 class StorePersonRequest extends FormRequest
@@ -23,9 +23,6 @@ class StorePersonRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|exists:users,id',
-            'name' => 'required|string|max:20',
-            'email' => 'required|email|unique:people,email',
             'phone' => 'nullable|string|max:15',
             'address' => 'nullable|string|max:100',
         ];
@@ -33,9 +30,8 @@ class StorePersonRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.unique' => 'Email already exists',
-            'email.required' => 'Please enter email.',
-            'name.required' => 'Please enter name.',
+            'phone.max' => 'Phone must be less than 15 characters.',
+            'address.max' => 'Address must be less than 100 characters.',
         ];
     }
 }
