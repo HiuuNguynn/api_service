@@ -19,6 +19,7 @@ class UsersImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             User::create([
                 'name'     => $row['name'],
                 'email'    => $row['email'],
+                'department_id' => $row['department_id'],
                 'password' => Hash::make($row['password']),
             ]);
         }
@@ -30,6 +31,7 @@ public function rules(): array
     return [
         '*.name'     => 'required|string|max:255',
         '*.email'    => 'required|email:rfc,dns|unique:users,email|max:255|regex:/^[^@\s]+@amela\.vn$/i',
+        '*.department_id' => 'required|exists:departments,id',
         '*.password' => 'required|string|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/',
     ];
 }
@@ -41,6 +43,8 @@ public function rules(): array
             '*.email.regex'    => 'Email must be a valid amela.vn email address',
             '*.email.unique'   => 'Email already exists in the system',
             '*.password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+            '*.department_id.required' => 'Department ID is required',
+            '*.department_id.exists' => 'Department ID does not exist',
         ];
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Service\AdminService;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\API\ImportFile;
+use App\Http\Requests\API\SetRole;
 
 class AdminController extends Controller
 {
@@ -16,10 +17,11 @@ class AdminController extends Controller
         $this->adminService = $adminService;
     }
 
-    public function setAdmin($id)
+    public function setRole(SetRole $request)
     {
-        $this->adminService->setAdmin($id);
-        return ApiResponse::success('User set to admin successfully');
+        $validated = $request->validated();
+        $this->adminService->setRole($validated);
+        return ApiResponse::success('User set to successfully');
     }
 
     public function setUser($id)

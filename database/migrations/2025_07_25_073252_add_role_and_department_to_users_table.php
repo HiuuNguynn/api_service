@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDeletedByToUsersTable extends Migration
+class AddRoleAndDepartmentToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddDeletedByToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('deleted_by')->nullable()->after('deleted_at');
-            $table->boolean('is_head_admin')->default(false);
+            $table->unsignedBigInteger('department_id')->nullable();
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null');
         });
     }
 
@@ -27,12 +27,7 @@ class AddDeletedByToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            if (Schema::hasColumn('users', 'deleted_by')) {
-                $table->dropColumn('deleted_by');
-            }
-            if (Schema::hasColumn('users', 'is_head_admin')) {
-                $table->dropColumn('is_head_admin');
-            }
+            $table->dropColumn('department_id');
         });
     }
 }

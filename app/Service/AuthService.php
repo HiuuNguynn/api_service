@@ -114,7 +114,7 @@ class AuthService
     public function deleteAccount($id, $emailAdmin)
     {
         $user = User::find($id);
-        if($user->role == User::ROLE_ADMIN) {
+        if($user->is_head_admin == User::IS_HEAD_ADMIN) {
             throw new AuthorizationException();
         }
         $user->status = User::STATUS_DEACTIVE;
@@ -126,7 +126,7 @@ class AuthService
 
     public function restoreAccount($id)
     {
-        $user = User::where('role', User::ROLE_USER)->onlyTrashed()->find($id);
+        $user = User::where('is_head_admin', User::IS_NOT_HEAD_ADMIN)->onlyTrashed()->find($id);
         $user->status = User::STATUS_ACTIVE;
         $user->restore();
         return $user;

@@ -27,8 +27,8 @@ Route::prefix('auth')->group(function () {
 
 Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function () {   
     Route::post('/register', [AuthController::class, 'register']);
-    Route::middleware('check.user.status')->group(function () {
-        Route::get('/set_admin/{id}', [AdminController::class, 'setAdmin']);
+    Route::middleware(['check.user.status', 'is.head.admin'])->group(function () {
+        Route::post('/set_role', [AdminController::class, 'setRole']);
         Route::get('/set_user/{id}', [AdminController::class, 'setUser']);
         Route::delete('/delete_account/{id}', [AuthController::class, 'deleteAccount']);
     });
@@ -38,6 +38,10 @@ Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function 
     Route::get('/users_deleted', [AdminController::class, 'usersDeleted']);
     Route::get('/send_emails_to_people', [AdminController::class, 'sendBatchEmailsToPeople']);
 });
+
+
+
+
 
 
 

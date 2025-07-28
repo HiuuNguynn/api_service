@@ -13,10 +13,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
+    const ROLE_MANAGER = 'manager';
     const ROLE_ADMIN = 'admin';
-    const ROLE_USER = 'user';
+    const ROLE_ADMIN_HEAD = 'admin_head';
+    const ROLE_USER = 'user';   
     const STATUS_ACTIVE = 1;
     const STATUS_DEACTIVE = 0;
+    const IS_HEAD_ADMIN = 1;
+    const IS_NOT_HEAD_ADMIN = 0;
 
     /**
      * The attributes that are mass assignable.
@@ -29,6 +33,8 @@ class User extends Authenticatable
         'password',
         'status',
         'role',
+        'is_head_admin',
+        'department_id',
     ];
 
     /**
@@ -70,4 +76,17 @@ class User extends Authenticatable
         return $user->where('status', self::STATUS_ACTIVE);
     }
 
+    public function scopeHeadAdmin($user)
+    {
+        return $user->where('is_head_admin', self::IS_HEAD_ADMIN);
+    }
+
+    public function department() {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function managedDepartment() {
+        return $this->hasOne(Department::class, 'manager_id');
+    }
+    
 }

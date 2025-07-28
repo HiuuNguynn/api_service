@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Models\User;
 use App\Models\Person;
 use App\Helpers\LogHelper;
-
+use App\Models\Department;
 class UserObserver
 {
 
@@ -28,6 +28,23 @@ class UserObserver
     {
         if ($user->wasChanged('deleted_at')) {
             return;
+        }
+        if ($user->wasChanged('role')) {
+           $roleUpdate = $user->role;
+           if($roleUpdate == User::ROLE_MANAGER) {
+            $idDepartment = $user->department_id;
+            $department = Department::find($idDepartment);
+            if ($department) {
+                $department->manager_id = $user->id;
+                $department->save();
+           } else {
+            $department = Department::where('manager_id', $user->id);
+            if ($department) {
+                $department->manager_id = null;
+                $department->save();
+            }
+        }
+           }
         }
         if ($user->wasChanged('status')) {
             $user->person()->update(['status' => $user->status]);

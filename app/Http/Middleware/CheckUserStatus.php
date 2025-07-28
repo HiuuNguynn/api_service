@@ -5,6 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Access\AuthorizationException;
+use App\Helpers\ApiResponse;
+use App\Models\Person;
+use App\Models\User;
 
 class CheckUserStatus
 {
@@ -19,15 +22,16 @@ class CheckUserStatus
      */
     public function handle(Request $request, Closure $next)
     {
-        $user = $request->user();
-        if (!$user) {
-            return $next($request);
+        $id = $request->route('id') ?? $request->input('id');
+        if ($id) {
+            $person = Person::find($id);
+            if (!$person) {
+                return ApiResponse::error('Person not found', 404);
+            }
+            if (isset($person->status) && $person->status == User::STATUS_DEACTIVE) {
+                throw new AuthorizationException('Account is deactive');
+            }
         }
-
-        if (isset($user->status) && $user->status == $user::STATUS_DEACTIVE) {
-            throw new AuthorizationException('Account is deactive');
-        }
-
         return $next($request);
     }
 }

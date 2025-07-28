@@ -3,8 +3,7 @@
 namespace App\Service;
 
 use App\Models\User;
-use App\Helpers\ApiResponse;
-use App\Http\Requests\API\ImportFile;
+use App\Helpers\ApiResponse;    
 use App\Http\Requests\API\ValidationFailures;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -14,7 +13,7 @@ use App\Jobs\SendBatchEmailJob;
 use App\Exports\UsersExport;
 use App\Imports\UsersImport;
 use App\Helpers\CommandResponse;
-
+use App\Models\Department;
 class AdminService
 {
     
@@ -38,10 +37,37 @@ class AdminService
         return CommandResponse::success("Scheduled email sending for {$totalPeople} users (status = 1) in {$batchCount} batches");
     }
 
-    public function setAdmin($id)
+    public function setRole($validated)
     {
-        return User::find($id)->update(['role' => User::ROLE_ADMIN]);
+        foreach ($validated['users'] as $userData) {
+            $user = User::find($userData['id']);
+            if (!$user) {
+                continue;
+            }
+
+            if ($userData['role'] === 'manager' && $user->department_id) {
+                $department = Department::find($user->department_id);
+
+                if ($department && $department->manager_id !== $user->id) {
+                    if ($department->manager_id) {
+                        User::where('id', $department->manager_id)
+                            ->update(['role' => 'user']);
+                    }
+
+                    $department->manager_id = $user->id;
+                    $department->save();
+                }
+            }
+
+            if ($user->role !== $userData['role']) {
+                $user->role = $userData['role'];
+                $user->save();
+            }
+        }
+
+        return ApiResponse::success('Roles updated successfully');
     }
+
 
     public function setUser($id)
     {
