@@ -31,6 +31,7 @@ Route::prefix('admin')->middleware(['auth.jwt', 'check.admin'])->group(function 
         Route::post('/set_role', [AdminController::class, 'setRole']);
         Route::get('/set_user/{id}', [AdminController::class, 'setUser']);
         Route::delete('/delete_account/{id}', [AuthController::class, 'deleteAccount']);
+        Route::post('/change_department', [AdminController::class, 'changeDepartment']);
     });
     Route::get('/restore_account/{id}', [AuthController::class, 'restoreAccount']);
     Route::get('/export_users', [AdminController::class, 'exportUsers']);

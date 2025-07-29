@@ -14,6 +14,7 @@ use App\Exports\UsersExport;
 use App\Imports\UsersImport;
 use App\Helpers\CommandResponse;
 use App\Models\Department;
+use Exception;
 class AdminService
 {
     
@@ -101,5 +102,15 @@ class AdminService
             Log::error('Import users failed: ' . $e->getMessage());
             return ApiResponse::error('Import failed during import', 500, ['details' => [$e->getMessage()]]);
         }
+    }
+
+    public function changeDepartment($validated)
+    {
+        $user = User::find($validated['id']);
+        if($user->role === 'manager') {
+            throw new Exception('Can not change department of manager! Please replace the manager first!');
+        }
+        $user->department_id = $validated['department_id'];
+        $user->save();
     }
 }

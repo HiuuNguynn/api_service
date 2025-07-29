@@ -7,7 +7,8 @@ use App\Service\AdminService;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\API\ImportFile;
 use App\Http\Requests\API\SetRole;
-
+use App\Http\Requests\API\ChangeDepartment;
+use Exception;
 class AdminController extends Controller
 {
     protected $adminService;
@@ -51,5 +52,16 @@ class AdminController extends Controller
     {
         $this->adminService->sendBatchEmailsToPeople();
         return ApiResponse::success('Email sent successfully');
+    }
+
+    public function changeDepartment(ChangeDepartment $request)
+    {
+        $validated = $request->validated();
+        try {
+            $this->adminService->changeDepartment($validated);
+            return ApiResponse::success('Department changed successfully');
+        } catch (Exception $e) {
+            return ApiResponse::error($e->getMessage(), 400);
+        }
     }
 }   
